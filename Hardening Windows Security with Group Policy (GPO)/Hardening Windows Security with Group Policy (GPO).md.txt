@@ -1,0 +1,79 @@
+To get started I pressed Win + R and type gpedit.msc, and pressed enter. This will open Local Group Policy Editor, which allows you to enforce security settings.
+
+Enforce Stronger Password Policies
+
+Navigated to: Computer Configuration > Windows Settings > Security Settings > Account Policies > Password Policy
+
+Double clicked on the following settings and modified them.
+
+Enforce password history > Set to 10 passwords. (This prevents users from reusing old passwords.
+
+Maximum password age > Set to 90 days. (This forces users to change their passwords every 3 months).
+
+Minimum password length > Set to 12 characters (This will require strong passwords).
+
+Password complexity  requirements > Enable (This forces the use of uppercase, lowercase, numbers, and symbols).
+
+Store passwords using reversible encryption > Disable (This prevents storing passwords in a recoverable form).
+
+Click Apply, then OK.
+
+Limit Failed Login Attempts (Brute-Force Protection)
+
+This will protect against brute-force attacks on local user accounts:
+
+Navigated to: Windows Settings > Security Settings > Account Policies >Account Lockout Policy
+
+Modified the following:
+
+Account lockout threshold > Set to 5 (This will lock an account after 5 failed logins).
+
+Account lockout duration > Set to 15 minutes (Temporary lockout before another attempt).
+
+Reset account lockout counter after > Set to 15 minutes.
+
+Enable Auditing for Security Events
+
+This logs security events like failed logins and privilege use:
+
+Navigated to Windows Settings > Security Settings > Local Policies > Audit Policy.
+
+Enabled auditing for:
+
+Audit account logon events > Success and Failure
+
+Audit logon events > Success and Failure
+
+Audit Privilege use > Success and Failure
+
+Audit policy change > Success and Failure
+
+Apply the Changes and Restart
+
+Opened Command Prompt as Administrator and ran:
+
+gpupdate /force
+
+This will apply the new policies.
+
+I had a typo twice but figured it out. The screenshot below is the correct script to run.
+
+Test the Security Enhancements
+
+Try to enter the wrong password 5 times > The account should lock.
+
+Check the Event Viewer for audit logs:
+
+Open Event Viewer> Win +R (eventvwr.msc).
+
+Go to Windows Logs > Security.
+
+Look for Event IDs: 
+
+4625 > Failed logon attempt
+
+4673 > Privilege use attempt
+
+4719 > Audit Policy change
+
+In conclusion, Hardening Windows Security with Group Policy (GPO) addresses security risks by enforcing stricter controls, reducing attack vectors, and improving visibility into system activity. Default windows configurations are often not secure enough for enterprise environments.
