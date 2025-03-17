@@ -1,0 +1,35 @@
+This project involves monitoring Windows Event Logs and analyzing logs using Powershell.
+
+The first thing I want to do is enable audit policies. Enabling these audit policies will track and log security related events in the security event log. Open Local Group Policy Editor (gpedit.msc). Navigate to Computer Configuration > Windows Settings > Security Settings > Local Policies > Audit Policy.
+
+Enable the following audit policies:
+
+Audit account logon events > Success, Failure
+
+Audit logon events > Success, Failure
+
+Audit Privilege use > Success, Failure
+
+Audit system events > Success, Failure
+
+Audit object access > Sucess, Failure
+
+Apply changes and close the editor.
+
+Collect Windows Event Logs with Powershell
+
+Get a list of all security logs. In powershell type Get-EventLog -Logname Security -Newest 10. This will retrieve the 10 most recent security event logs.
+
+Filter logs for failed logins (Event ID 4625)
+
+Get-EventLog -LogName Security | Where-Object { $_.EventID -eq 4625 } 
+
+This command will retrieve failed login attempts.
+
+View Event in Windows Event Viewer.
+
+To view event listed below open Event Viewer by pressing windows key and R and running eventvwr.msc. Navigate to Windows Logs > Security.
+
+Look for events with Event ID 4625 for failed logins. Filtering the log by Event ID will make it easier to find these entries. 
+
+The objective of this project was to analyze Windows Security Event Logs to detect and investigate potential security incidents such as brute force login attempts.
