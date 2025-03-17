@@ -1,0 +1,53 @@
+Creating a Test User Account To get started I’ll create a dummy user account to simulate a brute force attack. Open Command Prompt as Administrator. Ran the following command to create a test user: This will create a user named testuser with the password Password123456789 Running net user testuser verifies that the account was created…
+
+Creating a Test User Account
+
+To get started I’ll create a dummy user account to simulate a brute force attack.
+
+Open Command Prompt as Administrator.
+
+Ran the following command to create a test user:
+
+Net user testuser Password123456789/add
+This will create a user named testuser with the password Password123456789
+
+Running net user testuser verifies that the account was created
+
+
+Simulating a Brute-Force Atack
+
+Opened powershell as Administrator
+
+Ran the following command to simulate 10 failed login attempts:
+
+for ($i=0; $i -lt 10; $i++) {net use \\localhost /user:testuser Password123456788} 
+What this does is tries to log into the the machine with with the incorrect password.
+
+
+View Failed Login Attempts in Event Viewer
+
+Went into Windows Event Logs to see the failed logins by pressing Win + R and typing in (eventvwr.msc) and clicking run.
+
+Navigated to Windows Logs > Security
+
+On the right panel I clicked find and searched for Event ID 4625 (This event ID is for failed login attempts).
+
+Looked for repeated failed logins from testuser
+
+When I clicked on the event I checked to make sure the Account Name was testuser and the Failure Reason mentioned incorrect password attempts.
+
+
+Creating an Alert for Multiple Failed Logins
+
+Used Splunk to help send alerts when 5 failed logins occur.
+
+Once in Splunk I went to search and reporting and typed in the following.
+
+index=windows EventCode=4625 | stats count by testuser, desktop-b2c1qe6, IpAddress | where count > 5
+Clicked Save as. This will detect brute force login attempts and trigger an email alert if enabled in Splunk.
+
+
+When I clicked save as this popped up another box that let me edit the way I wanted to be alerted, for example I could change the alert from scheduled to real time so that the alerts are sent in real time. I could also change how often I wanted the alerts ran and which day and time. It’s cool how you can set the alerts the way that you want them in Splunk.
+
+
+In conclusion, I think this project is good for being proactive rather than reactive. I think security postures like this can help with incident response readiness and allow security teams to detect and respond to real brute force attacks.
